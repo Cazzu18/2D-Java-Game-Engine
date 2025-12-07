@@ -1,0 +1,56 @@
+########################
+# Gradle & build stuff #
+########################
+.gradle/
+build/
+out/
+
+# local libs or temp
+libs/
+tmp/
+
+##########################
+# IntelliJ / IDE files   #
+##########################
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### VS Code ###
+.vscode/
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+###################
+# OS junk files   #
+###################
+.DS_Store
+Thumbs.db
+
+###################
+# Java binaries   #
+###################
+*.class
+
+###################
+# Logs, misc      #
+###################
+*.log
+*.swp
+*.swo
