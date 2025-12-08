@@ -6,7 +6,7 @@
 //vec3 is a 3 component floating point vector type. Used for various purposes like positions(3D), Normals, Colors, Directions
 layout(location=0) in vec3 aPos; //layout(location=0) explicitly assigns a specific index (0 in this case) to a shader variable
 layout(location=1) in vec4 aColor; //rgba
-layout(location=2) in vec2 aTexCoords;//vertex Array in LevelEditorScnene(Tex coordinates)
+//layout(location=2) in vec2 aTexCoords;//vertex Array in LevelEditorScnene(Tex coordinates)
 
 //we upload these from Shader class
 uniform mat4 uProjection;
@@ -14,11 +14,11 @@ uniform mat4 uView;
 
 //prefix with f because going to fragement shader
 out vec4 fColor;
-out vec2 fTexCoords;
+//out vec2 fTexCoords;
 
 void main(){
     fColor = aColor;
-    fTexCoords = aTexCoords;
+    //fTexCoords = aTexCoords;
     gl_Position = uProjection * uView * vec4(aPos, 1.0); //will create a vector4 with aPos as the first three elements and 1.0 as the 4th
 
 }
@@ -26,17 +26,17 @@ void main(){
 #type fragment
 #version 330 core
 
-uniform float uTime;
-uniform sampler2D TEX_SAMPLER;
+//uniform float uTime;
+//uniform sampler2D TEX_SAMPLER;
 
 in vec4 fColor;
-in vec2 fTexCoords;
+//in vec2 fTexCoords;
 
 out vec4 color;
 
 void main(){
 
-    color = texture(TEX_SAMPLER, fTexCoords);
+    color = fColor;
 
     //we convert the product of the sin of the dot product(returns a scalar that represents the degree to which two vectors point in the same direction)of fColor.xy and the random vector and the random number 43758... into a fraction
     //noise formula found online. Sin clamps between 0 and 1

@@ -6,10 +6,28 @@ import java.util.List;
 public class GameObject {
     private String name;
     private List<Component> components;
+    public Transform transform;
 
     public GameObject(String name) {
+        init(name, new Transform(), new ArrayList<>());
+    }
+
+    public GameObject(String name, Transform transform) {
+        init(name, transform, new ArrayList<>());
+    }
+
+    public GameObject(String name, List<Component> components) {
+        init(name, new Transform(), components);
+    }
+
+    public GameObject(String name, Transform transform, List<Component> components) {
+        init(name, transform, components);
+    }
+
+    public void init(String name, Transform transform, List<Component> components) {
         this.name = name;
-        this.components = new ArrayList<>();
+        this.transform = transform;
+        this.components = components;
     }
 
     //we have a class T that extends Component so the return type will be a subclass of component
