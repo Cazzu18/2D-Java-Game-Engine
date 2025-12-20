@@ -14,6 +14,15 @@ public class LevelEditorScene extends Scene {
     public void init() {
         this.camera = new Camera(new Vector2f());
 
+        GameObject obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)));//position and scale(pixel size of projection)
+        obj1.addComponent(new SpriteRenderer(AssetPool.getTexture("assets/images/testImage.png")));
+        this.addGameObjectToScene(obj1);
+
+        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 400), new Vector2f(256, 256)));
+        obj2.addComponent(new SpriteRenderer(AssetPool.getTexture("assets/images/testImage2.png")));
+        this.addGameObjectToScene(obj2);
+
+        /*
         int xOffset = 10;//padding of 10
         int yOffset = 10;
 
@@ -24,7 +33,7 @@ public class LevelEditorScene extends Scene {
         float sizeY = totalHeight/100.0f;
 
 
-        //creating 10,00 objects(100 * 100)
+        Note: creating 10,00 objects(100 * 100)
         for(int x=0; x < 100; x++){
             for(int y=0; y < 100; y++){
                 float xPos = xOffset + (x * sizeX);
@@ -35,6 +44,7 @@ public class LevelEditorScene extends Scene {
 
             }
         }
+        */
 
         loadResources();
 
