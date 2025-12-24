@@ -1,6 +1,8 @@
 package jade;
 
+import components.Sprite;
 import components.SpriteRenderer;
+import components.Spritesheet;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import util.AssetPool;
@@ -12,14 +14,17 @@ public class LevelEditorScene extends Scene {
 
     @Override
     public void init() {
+        loadResources();
         this.camera = new Camera(new Vector2f());
 
+        Spritesheet sprites  = AssetPool.getSpritesheet("assets/images/spritesheet.png");
+
         GameObject obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)));//position and scale(pixel size of projection)
-        obj1.addComponent(new SpriteRenderer(AssetPool.getTexture("assets/images/testImage.png")));
+        obj1.addComponent(new SpriteRenderer(sprites.getSprite(0)));
         this.addGameObjectToScene(obj1);
 
         GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 400), new Vector2f(256, 256)));
-        obj2.addComponent(new SpriteRenderer(AssetPool.getTexture("assets/images/testImage2.png")));
+        obj2.addComponent(new SpriteRenderer(sprites.getSprite(17)));
         this.addGameObjectToScene(obj2);
 
         /*
@@ -45,14 +50,13 @@ public class LevelEditorScene extends Scene {
             }
         }
         */
-
-        loadResources();
-
-
     }
 
     private void loadResources(){
         AssetPool.getShader("assets/shaders/default.glsl");
+
+        AssetPool.addSpritesheet("assets/images/spritesheet.png",
+                new Spritesheet(AssetPool.getTexture("assets/images/spritesheet.png"), 16, 16, 26, 0));
 
     }
 
