@@ -22,12 +22,17 @@ public class LevelEditorScene extends Scene {
         sprites  = AssetPool.getSpritesheet("assets/images/spritesheet.png");
 
         obj1 = new GameObject("Object 1", new Transform(new Vector2f(200, 100), new Vector2f(256, 256)), 2);//position and scale(pixel size of projection)
-        obj1.addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("assets/images/blendImage1.png"))));
+        obj1.addComponent(new SpriteRenderer(sprites.getSprite(0)));
+        //obj1.addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("assets/images/blendImage1.png"))));
         this.addGameObjectToScene(obj1);
 
-        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), -1);
+        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 400), new Vector2f(256, 256)), -1);
         obj2.addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("assets/images/blendImage2.png"))));
         this.addGameObjectToScene(obj2);
+
+        GameObject obj3 = new GameObject("Object 2", new Transform(new Vector2f(200, 400), new Vector2f(256, 256)), -1);
+        obj3.addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("assets/images/blendImage1.png"))));
+        this.addGameObjectToScene(obj3);
 
         /*
         int xOffset = 10;//padding of 10
@@ -67,16 +72,16 @@ public class LevelEditorScene extends Scene {
     private float spriteFlipTimeLeft = 0.0f;
     @Override
     public void update(float dt) {
-//        spriteFlipTimeLeft -= dt;
-//        if(spriteFlipTimeLeft <= 0){
-//            spriteFlipTimeLeft = spriteFlipTime;
-//            spriteIndex++;
-//            if(spriteIndex > 4){
-//                spriteIndex = 0;
-//            }
-//
-//            obj1.getComponent(SpriteRenderer.class).setSprite(sprites.getSprite(spriteIndex));
-//        }
+        spriteFlipTimeLeft -= dt;
+        if(spriteFlipTimeLeft <= 0){
+            spriteFlipTimeLeft = spriteFlipTime;
+            spriteIndex++;
+            if(spriteIndex > 4){
+                spriteIndex = 0;
+            }
+
+            obj1.getComponent(SpriteRenderer.class).setSprite(sprites.getSprite(spriteIndex));
+        }
 
 
         System.out.println("FPS: " + (1.0f/dt));
