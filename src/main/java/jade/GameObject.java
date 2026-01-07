@@ -7,25 +7,27 @@ public class GameObject {
     private String name;
     private List<Component> components;
     public Transform transform;
+    private int zIndex;
 
     public GameObject(String name) {
-        init(name, new Transform(), new ArrayList<>());
+        init(name, new Transform(), new ArrayList<>(), 0);
     }
 
-    public GameObject(String name, Transform transform) {
-        init(name, transform, new ArrayList<>());
+    public GameObject(String name, Transform transform, int zIndex) {
+        init(name, transform, new ArrayList<>(), zIndex);
     }
 
-    public GameObject(String name, List<Component> components) {
-        init(name, new Transform(), components);
+    public GameObject(String name, List<Component> components, int zIndex) {
+        init(name, new Transform(), components, zIndex);
     }
 
-    public GameObject(String name, Transform transform, List<Component> components) {
-        init(name, transform, components);
+    public GameObject(String name, Transform transform, List<Component> components, int zIndex) {
+        init(name, transform, components, zIndex);
     }
 
-    public void init(String name, Transform transform, List<Component> components) {
+    public void init(String name, Transform transform, List<Component> components, int zIndex) {
         this.name = name;
+        this.zIndex = zIndex;
         this.transform = transform;
         this.components = components;
     }
@@ -73,6 +75,10 @@ public class GameObject {
         for(int i =0; i < components.size(); i++){
             components.get(i).start();//the start function of the GameObject class calls the start function of every individual component in the List
         }
+    }
+
+    public int zIndex(){
+        return this.zIndex;
     }
 
 
