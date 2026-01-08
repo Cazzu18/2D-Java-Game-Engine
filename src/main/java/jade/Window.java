@@ -18,7 +18,7 @@ public class Window {
     private int width, height;
     private String title;
     private long glfwWindow;
-
+    private ImGuiLayer imGuiLayer;
     public float r, g, b, a;
 
     //singleton. We'll only ever have one instance of window
@@ -133,6 +133,9 @@ public class Window {
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);//(sfactor, dfactor) source and destination
 
+        this.imGuiLayer = new ImGuiLayer(glfwWindow);
+        this.imGuiLayer.initImGui();
+
 
         Window.changeScene(0);
     }
@@ -164,6 +167,8 @@ public class Window {
             * to be replaced with the new one in a single monitor refresh cycle
             * and seamless transition.
             */
+
+            this.imGuiLayer.update(dt);
             glfwSwapBuffers(glfwWindow);
 
             endTime = Time.getTime();
@@ -171,7 +176,22 @@ public class Window {
             beginTime = endTime;
 
         }
+
     }
 
+    public static int getWidth() {
+        return get().width;
+    }
 
+    public static int getHeight() {
+        return get().height;
+    }
+
+    public static void setWidth(int newWidth) {
+        get().width = newWidth;
+    }
+
+    public static void setHeight(int newHeight) {
+        get().height = newHeight;
+    }
 }
