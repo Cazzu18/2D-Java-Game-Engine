@@ -2,6 +2,7 @@ package jade;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import components.RigidBody;
 import components.Sprite;
 import components.SpriteRenderer;
 import components.Spritesheet;
@@ -23,6 +24,7 @@ public class LevelEditorScene extends Scene {
         loadResources();
         this.camera = new Camera(new Vector2f(-250, 0));
         if(levelLoaded){
+            this.activeGameObject = gameObjects.get(0);
             return;
         }
 
@@ -32,8 +34,8 @@ public class LevelEditorScene extends Scene {
         obj2SpriteRenderer = new SpriteRenderer();
         obj2SpriteRenderer.setColor(new Vector4f(1, 0, 0, 1));
         obj2.addComponent(obj2SpriteRenderer);
+        obj2.addComponent(new RigidBody());
         this.addGameObjectToScene(obj2);
-        this.activeGameObject = obj2;
 
         GameObject obj3 = new GameObject("Object 2", new Transform(new Vector2f(200, 400), new Vector2f(256, 256)), 2);
         SpriteRenderer obj3SpriteRenderer = new SpriteRenderer();
@@ -77,10 +79,14 @@ public class LevelEditorScene extends Scene {
     }
 
     private void loadResources(){
+
+        //TODO: Make sure order isnt affecting what is rendered
         AssetPool.getShader("assets/shaders/default.glsl");
 
         AssetPool.addSpritesheet("assets/images/spritesheet.png",
                 new Spritesheet(AssetPool.getTexture("assets/images/spritesheet.png"), 16, 16, 26, 0));
+        AssetPool.getTexture("assets/images/blendImage2.png");
+
 
     }
 
