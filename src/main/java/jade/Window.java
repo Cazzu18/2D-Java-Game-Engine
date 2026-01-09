@@ -145,6 +145,7 @@ public class Window {
         float endTime; //time that the frame ended
         float dt = -1.0f;
 
+        currentScene.load();
         while(!glfwWindowShouldClose(glfwWindow)){
             //poll events
             glfwPollEvents();
@@ -176,6 +177,8 @@ public class Window {
             beginTime = endTime;
 
         }
+
+        currentScene.saveExit();
 
     }
 
