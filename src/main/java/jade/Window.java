@@ -168,7 +168,7 @@ public class Window {
             * and seamless transition.
             */
 
-            this.imGuiLayer.update(dt);
+            this.imGuiLayer.update(dt, currentScene);
             glfwSwapBuffers(glfwWindow);
 
             endTime = Time.getTime();

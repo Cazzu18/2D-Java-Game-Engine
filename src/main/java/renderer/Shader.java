@@ -58,8 +58,8 @@ public class Shader {
             assert false: "Error: Could not load shader file: '" + filepath + "'";
         }
 
-        System.out.println(vertexSource);
-        System.out.println(fragmentSource);
+//        System.out.println(vertexSource);
+//        System.out.println(fragmentSource);
     }
 
     public void compile_and_link(){

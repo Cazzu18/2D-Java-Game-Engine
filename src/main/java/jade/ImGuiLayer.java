@@ -1,11 +1,11 @@
 package jade;
 
-import imgui.ImGui;
-import imgui.ImGuiIO;
+import imgui.*;
+//import imgui.ImGui;
+//import imgui.ImGuiIO;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.gl3.ImGuiImplGl3;
-
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
@@ -32,7 +32,7 @@ public class ImGuiLayer {
 
         //Configuring ImGui
         ImGuiIO io = ImGui.getIO();
-        io.setIniFilename(null); // Don't write imgui.ini
+        io.setIniFilename("imgui.ini"); // Don't write imgui.ini
 
         //so I don't overwrite flags accidentally.
         io.addConfigFlags(ImGuiConfigFlags.NavEnableKeyboard);
@@ -43,6 +43,21 @@ public class ImGuiLayer {
         //- true = install GLFW callbacks (recommended)
         imGuiGlfw.init(glfwWindow, true);
         imGuiGl3.init(GLSL_VERSION);
+
+        //must be enabled before font atlas generation
+        io.getFonts().setFreeTypeRenderer(true);
+
+        //a b c d e f g ! 1 2 3 4 5 6
+        final ImFontAtlas fontAtlas = io.getFonts();
+        final ImFontConfig fontConfig = new ImFontConfig(); // Natively allocated object, should be explicitly destroyed
+
+        // Fonts merge example
+        fontConfig.setPixelSnapH(true);//snap glyph positions to whole pixels on the horizontal axis when building/rendering fonts
+
+        // Glyphs could be added per-font as well as per config used globally like here
+        fontAtlas.addFontFromFileTTF("assets/fonts/segoeui.ttf", 32, fontConfig, fontAtlas.getGlyphRangesDefault());
+
+        fontConfig.destroy(); // After all fonts were added we don't need this config more
     }
 
     /**
@@ -52,13 +67,13 @@ public class ImGuiLayer {
      *   imguiLayer.update(dt);
      *   glfwSwapBuffers(window);
      */
-    public void update(float dt) {
+    public void update(float dt, Scene currentScene) {
         //allowing the backends update IO (delta time, input, display size, etc.)
         //GLFW backend will set io.DeltaTime internally.
         imGuiGlfw.newFrame();
         imGuiGl3.newFrame();
-
         ImGui.newFrame();
+        currentScene.sceneImgui();//calling every frame
         ImGui.showDemoWindow();
         ImGui.render();
         imGuiGl3.renderDrawData(ImGui.getDrawData());
