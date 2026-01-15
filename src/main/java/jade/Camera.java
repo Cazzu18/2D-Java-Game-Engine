@@ -6,13 +6,15 @@ import org.joml.Vector3f;
 
 public class Camera {
 
-    private Matrix4f projectionMatrix, viewMatrix; //4f means 4*4
+    private Matrix4f projectionMatrix, viewMatrix, inverseProjection, inverseView; //4f means 4*4
     public Vector2f position; //2*2 matrix. this is the position of the camera in the world
 
     public Camera(Vector2f position) {
         this.position = position;
         this.projectionMatrix = new Matrix4f();
         this.viewMatrix = new Matrix4f();
+        this.inverseProjection = new Matrix4f();
+        this.inverseView = new Matrix4f();
         adjustProjection();
     }
 
@@ -20,7 +22,7 @@ public class Camera {
     public void adjustProjection(){
         projectionMatrix.identity(); //identity matrix(1 diagonal)
         projectionMatrix.ortho(0.0f, 32.0f * 40.0f, 0.0f, 32.0f * 21.0f, 0.0f, 100.0f); //40 grid tiles wide that are 32*32 each and 21 tiles tall. left, right, bottom, top, zNear, zFar
-
+        projectionMatrix.invert(inverseProjection);//invert projection matrix and place it inside inverseProjection matrix
     }
 
     //view matrix moves the world so that the camera becomes the origin
@@ -31,11 +33,21 @@ public class Camera {
         viewMatrix.lookAt(new Vector3f(position.x, position.y, 20.0f),
                                             cameraFront.add(position.x, position.y, 0.0f),
                                             cameraUp); //the first parameter specifies where the camera is located(allow movement on X and Y and Z is fixed 20 units away from scene), the second specifies where the camera is looking cameraFront starts as (0, 0, -1), then we add camera's position so it looks at (cameraX, cameraY, -1)
+
+        this.viewMatrix.invert(inverseView);
         return this.viewMatrix;
     }
 
     public Matrix4f getProjectionMatrix() {
         return this.projectionMatrix;
+    }
+
+    public Matrix4f getInverseProjection() {
+        return this.inverseProjection;
+    }
+
+    public Matrix4f getInverseView() {
+        return this.inverseView;
     }
 
 }
