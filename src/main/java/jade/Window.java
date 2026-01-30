@@ -5,6 +5,7 @@ package jade;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import renderer.DebugDraw;
 import scenes.LevelEditorScene;
 import scenes.LevelScene;
 import scenes.Scene;
@@ -152,6 +153,8 @@ public class Window {
             //poll events
             glfwPollEvents();
 
+            DebugDraw.beginFrame();
+
             //every frame
             glClearColor(r, g, b, a);
 
@@ -160,6 +163,7 @@ public class Window {
 
             //a lag of two frames before we start updating
             if(dt >= 0) { //since we initialize dt below this code
+                DebugDraw.draw();//draw line and then everything else
                 currentScene.update(dt);
             }
 

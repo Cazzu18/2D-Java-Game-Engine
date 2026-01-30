@@ -8,7 +8,9 @@ import jade.GameObject;
 import jade.Prefabs;
 import jade.Transform;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
+import renderer.DebugDraw;
 import util.AssetPool;
 
 public class LevelEditorScene extends Scene {
@@ -26,6 +28,8 @@ public class LevelEditorScene extends Scene {
         loadResources();
         this.camera = new Camera(new Vector2f(-250, 0));
         sprites  = AssetPool.getSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png");
+
+
         if(levelLoaded){
             this.activeGameObject = gameObjects.get(0);
             this.activeGameObject.addComponent(new RigidBody());
@@ -45,6 +49,8 @@ public class LevelEditorScene extends Scene {
         obj3SpriteRenderer.setSprite(obj3Sprite);
         obj3.addComponent(obj3SpriteRenderer);
         this.addGameObjectToScene(obj3);
+
+
 
 //        Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Component.class, new ComponentDeserializer()).registerTypeAdapter(GameObject.class, new GameObjectDeserializer()).create();//.create() is important
 //        String serialized = gson.toJson(obj2);
@@ -94,6 +100,9 @@ public class LevelEditorScene extends Scene {
 //    private int spriteIndex = 0;
 //    private float  spriteFlipTime = 0.2f;//moving the sprite every 0.2 seconds
 //    private float spriteFlipTimeLeft = 0.0f;
+
+
+    float t = 0.0f;
     @Override
     public void update(float dt) {
 
@@ -112,6 +121,11 @@ public class LevelEditorScene extends Scene {
 //        System.out.println("FPS: " + (1.0f/dt));
 
         mouseControls.update(dt);
+
+        float x = ((float)Math.sin(t) * 200.0f) + 600; //drawing a circle with radius of 200
+        float y = ((float)Math.cos(t) * 200.0f) + 400;
+        t += 0.05f;
+        DebugDraw.addLine2D(new Vector2f(600, 400), new Vector2f(x, y), new Vector3f(0,0, 1), 10);
 
         for(GameObject go: this.gameObjects){
             go.update(dt);
