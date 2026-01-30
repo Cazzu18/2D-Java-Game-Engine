@@ -1,9 +1,13 @@
 package jade;
 
+import components.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameObject {
+    private static int ID_COUNTER = 0;
+    private int uid = -1;
     private String name;
     private List<Component> components;
     public Transform transform;
@@ -30,6 +34,8 @@ public class GameObject {
         this.zIndex = zIndex;
         this.transform = transform;
         this.components = components;
+
+        this.uid = ID_COUNTER++;//might pose problems in the future
     }
 
     //we have a class T that extends Component so the return type will be a subclass of component
@@ -61,6 +67,7 @@ public class GameObject {
     }
 
     public void addComponent(Component c){
+        c.generateID();
         this.components.add(c);
         c.gameObject = this; //we send a reference of this to the Component class
     }
@@ -85,6 +92,18 @@ public class GameObject {
         for(Component c : components){
             c.imgui();
         }
+    }
+
+    public static void init(int maxID){
+        ID_COUNTER = maxID;
+    }
+
+    public int getUid(){
+        return this.uid;
+    }
+
+    public List<Component> getAllComponents(){
+        return this.components;
     }
 
 

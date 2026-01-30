@@ -1,6 +1,7 @@
-package jade;
+package components;
 
 import imgui.ImGui;
+import jade.GameObject;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -8,6 +9,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 public abstract class Component {
+
+    private static int ID_COUNTER = 0; //associated with components and objects
+    private int uid = -1;//associated with every component itself
+
     public transient GameObject gameObject = null;
 
     public void start(){//concrete overridable method
@@ -78,5 +83,21 @@ public abstract class Component {
         } catch(IllegalAccessException e){//try to get a member variable that doesnt exist
             e.printStackTrace();
         }
+    }
+
+    public void generateID(){
+        if(this.uid == -1){
+            this.uid = ID_COUNTER++;
+        }
+    }
+
+
+    public int getUid(){
+        return this.uid;
+    }
+
+    //loading levels
+    public static void init(int maxId){
+        ID_COUNTER = maxId;
     }
 }

@@ -6,6 +6,8 @@ import imgui.*;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.gl3.ImGuiImplGl3;
+import scenes.Scene;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 /**

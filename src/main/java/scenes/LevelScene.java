@@ -1,6 +1,8 @@
-package jade;
+package scenes;
 
-public class LevelScene extends Scene{
+import jade.Window;
+
+public class LevelScene extends Scene {
     public LevelScene() {
         System.out.println("Inside LevelScene");
         Window.get().r = 1;
