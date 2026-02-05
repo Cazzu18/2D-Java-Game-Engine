@@ -38,9 +38,10 @@ public class LevelEditorScene extends Scene {
 
 
         if(levelLoaded){
-            this.activeGameObject = gameObjects.get(0);
-            this.activeGameObject.addComponent(new RigidBody());
-            return;
+            if(gameObjects.size() > 0){
+                this.activeGameObject = gameObjects.get(0);
+            }
+
         }
 //        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 400), new Vector2f(256, 256)), -1);
 //        obj2SpriteRenderer = new SpriteRenderer();
@@ -94,12 +95,21 @@ public class LevelEditorScene extends Scene {
 
     private void loadResources(){
 
-        //TODO: Make sure order isnt affecting what is rendered
         AssetPool.getShader("assets/shaders/default.glsl");
 
         AssetPool.addSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png",
                 new Spritesheet(AssetPool.getTexture("assets/images/spritesheets/decorationsAndBlocks.png"), 16, 16, 81, 0));
         AssetPool.getTexture("assets/images/blendImage2.png");
+
+        //go through each game object and set texture to the one texture they should have from assetpool
+        for (GameObject obj : gameObjects) {
+            if(obj.getComponent(SpriteRenderer.class) != null){
+                SpriteRenderer spr = obj.getComponent(SpriteRenderer.class);
+                if(spr.getTexture() != null){
+                    spr.setTexture(AssetPool.getTexture(spr.getTexture().getFilepath()));
+                }
+            }
+        }
 
 
     }

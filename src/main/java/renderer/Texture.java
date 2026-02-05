@@ -11,13 +11,8 @@ import static org.lwjgl.stb.STBImage.*;
 public class Texture {
 
     private String filepath;
-    private int texID;
+    private transient int texID; //we do not want to serialize texture ID
     private int width, height;
-
-
-//    public Texture(String filepath) {
-//
-//    }
 
     public Texture(){
         texID = -1;

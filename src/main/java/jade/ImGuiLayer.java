@@ -3,9 +3,13 @@ package jade;
 import imgui.*;
 //import imgui.ImGui;
 //import imgui.ImGuiIO;
+import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiConfigFlags;
+import imgui.flag.ImGuiStyleVar;
+import imgui.flag.ImGuiWindowFlags;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.gl3.ImGuiImplGl3;
+import imgui.type.ImBoolean;
 import scenes.Scene;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -75,8 +79,10 @@ public class ImGuiLayer {
         imGuiGlfw.newFrame();
         imGuiGl3.newFrame();
         ImGui.newFrame();
+        setupDockspace();
         currentScene.sceneImgui();//calling every frame
         ImGui.showDemoWindow();
+        ImGui.end();
         ImGui.render();
         imGuiGl3.renderDrawData(ImGui.getDrawData());
 
@@ -94,5 +100,25 @@ public class ImGuiLayer {
         imGuiGl3.shutdown();
         imGuiGlfw.shutdown();
         ImGui.destroyContext();
+    }
+
+    public void setupDockspace() {
+        //"parent" window
+        int windowFlags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking;
+        ImGui.setNextWindowPos(0.0f, 0.0f, ImGuiCond.Always); //start at topleft and make sure its window width and window height
+        ImGui.setNextWindowSize(Window.getWidth(), Window.getHeight());
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
+        windowFlags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
+
+
+        ImGui.begin("Dockspace Demo", new ImBoolean(true), windowFlags);
+
+        ImGui.popStyleVar();
+        ImGui.popStyleVar();
+
+        //Dockspace
+        ImGui.dockSpace(ImGui.getID("Dockspace"));
+
     }
 }
