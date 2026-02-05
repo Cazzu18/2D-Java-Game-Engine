@@ -183,7 +183,7 @@ public class RenderBatch implements Comparable<RenderBatch>{
         //[tex, tex, tex] loop through until we find the one we're looking at
         if(sprite.getTexture() != null){
             for(int i = 0; i <textures.size(); i++){
-                if(textures.get(i) == sprite.getTexture()){
+                if(textures.get(i).equals(sprite.getTexture())){ // == on two objects is address comparison
                     texId = i + 1;
                     break;
                 }

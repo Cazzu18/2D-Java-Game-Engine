@@ -6,10 +6,13 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import renderer.DebugDraw;
+import renderer.Framebuffer;
 import scenes.LevelEditorScene;
 import scenes.LevelScene;
 import scenes.Scene;
 import util.Time;
+
+import java.awt.*;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -23,6 +26,7 @@ public class Window {
     private String title;
     private long glfwWindow;
     private ImGuiLayer imGuiLayer;
+    private Framebuffer framebuffer;
     public float r, g, b, a;
 
     //singleton. We'll only ever have one instance of window
@@ -140,6 +144,9 @@ public class Window {
         this.imGuiLayer = new ImGuiLayer(glfwWindow);
         this.imGuiLayer.initImGui();
 
+        //TODO: Query for monitor screen size
+        this.framebuffer = new Framebuffer(1920, 1080);
+
 
         Window.changeScene(0);
     }
@@ -161,11 +168,15 @@ public class Window {
             //telling OpenGl to use the color buffer bit
             glClear(GL_COLOR_BUFFER_BIT); //flush clear color to entire screen
 
+            //this.framebuffer.bind();
+
             //a lag of two frames before we start updating
             if(dt >= 0) { //since we initialize dt below this code
                 DebugDraw.draw();//draw line and then everything else
                 currentScene.update(dt);
             }
+
+            this.framebuffer.unbind();
 
             /*
             * if you use double buffering you can update the screen

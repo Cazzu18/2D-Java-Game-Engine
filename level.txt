@@ -172,6 +172,45 @@
           },
           "uid": 47
         }
+      },
+      {
+        "type": "components.RigidBody",
+        "properties": {
+          "colliderType": 0,
+          "friction": 0.5,
+          "velocity": {
+            "x": 0.0,
+            "y": 0.5,
+            "z": 0.0
+          },
+          "uid": 50
+        }
+      },
+      {
+        "type": "components.RigidBody",
+        "properties": {
+          "colliderType": 0,
+          "friction": 0.5,
+          "velocity": {
+            "x": 0.0,
+            "y": 0.5,
+            "z": 0.0
+          },
+          "uid": 53
+        }
+      },
+      {
+        "type": "components.RigidBody",
+        "properties": {
+          "colliderType": 0,
+          "friction": 0.5,
+          "velocity": {
+            "x": 0.0,
+            "y": 0.5,
+            "z": 0.0
+          },
+          "uid": 56
+        }
       }
     ],
     "transform": {
