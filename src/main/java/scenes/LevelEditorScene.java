@@ -107,7 +107,9 @@ public class LevelEditorScene extends Scene {
 //    private int spriteIndex = 0;
 //    private float  spriteFlipTime = 0.2f;//moving the sprite every 0.2 seconds
 //    private float spriteFlipTimeLeft = 0.0f;
-
+    float angle = 0.0f;
+    float x =0.0f;
+    float y =0.0f;
     @Override
     public void update(float dt) {
 
@@ -126,7 +128,11 @@ public class LevelEditorScene extends Scene {
 //        System.out.println("FPS: " + (1.0f/dt));
 
         LevelEditorThings.update(dt);
-
+        DebugDraw.addCircle(new Vector2f(x, y), 64, new Vector3f(1, 0, 0), 1);
+        x += 50f * dt;
+        y += 50f * dt;
+        DebugDraw.addBox2D(new Vector2f(200, 200), new Vector2f(64, 32), angle, new Vector3f(0, 1, 0), 1);
+        angle += 60.0f * dt;
 //        float x = ((float)Math.sin(t) * 200.0f) + 600; //drawing a circle with radius of 200
 //        float y = ((float)Math.cos(t) * 200.0f) + 400;
 //        t += 0.05f;
