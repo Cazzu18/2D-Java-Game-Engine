@@ -44,7 +44,7 @@ public class ImGuiLayer {
         //so I don't overwrite flags accidentally.
         io.addConfigFlags(ImGuiConfigFlags.NavEnableKeyboard);
         io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
-        io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
+        //io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
 
         //Init backends:
         //- true = install GLFW callbacks (recommended)
