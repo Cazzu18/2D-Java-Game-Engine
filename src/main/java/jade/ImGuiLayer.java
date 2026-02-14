@@ -1,5 +1,6 @@
 package jade;
 
+import editor.GameViewWIndow;
 import imgui.*;
 //import imgui.ImGui;
 //import imgui.ImGuiIO;
@@ -82,6 +83,7 @@ public class ImGuiLayer {
         setupDockspace();
         currentScene.sceneImgui();//calling every frame
         ImGui.showDemoWindow();
+        GameViewWIndow.imgui();
         ImGui.end();
         ImGui.render();
         imGuiGl3.renderDrawData(ImGui.getDrawData());

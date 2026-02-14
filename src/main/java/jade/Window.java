@@ -146,6 +146,7 @@ public class Window {
 
         //TODO: Query for monitor screen size
         this.framebuffer = new Framebuffer(1920, 1080);
+        glViewport(0, 0, 1920, 1080);
 
 
         Window.changeScene(0);
@@ -162,13 +163,13 @@ public class Window {
 
             DebugDraw.beginFrame();
 
+            this.framebuffer.bind();
+
             //every frame
             glClearColor(r, g, b, a);
 
             //telling OpenGl to use the color buffer bit
             glClear(GL_COLOR_BUFFER_BIT); //flush clear color to entire screen
-
-            //this.framebuffer.bind();
 
             //a lag of two frames before we start updating
             if(dt >= 0) { //since we initialize dt below this code
@@ -213,5 +214,13 @@ public class Window {
 
     public static void setHeight(int newHeight) {
         get().height = newHeight;
+    }
+
+    public static Framebuffer getFrameBuffer() {
+        return get().framebuffer;
+    }
+
+    public static float getTargetAspectRatio() {
+        return 16.0f / 9.0f;
     }
 }
