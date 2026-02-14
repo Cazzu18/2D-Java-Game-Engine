@@ -82,7 +82,7 @@ public class ImGuiLayer {
         ImGui.newFrame();
         setupDockspace();
         currentScene.sceneImgui();//calling every frame
-        ImGui.showDemoWindow();
+        //ImGui.showDemoWindow();
         GameViewWIndow.imgui();
         ImGui.end();
         ImGui.render();

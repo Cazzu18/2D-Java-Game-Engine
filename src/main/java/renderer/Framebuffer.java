@@ -8,6 +8,7 @@ public class Framebuffer {
     public Framebuffer(int width, int height){
         //Generate framebuffer
         fboID = glGenFramebuffers();
+        bind();
 
 
         //create the texture to render the data to, and attach it to our frame buffer

@@ -15,7 +15,7 @@ public class GameViewWIndow {
 
         ImGui.setCursorPos(windowPos.x, windowPos.y);//draw next thing at this pos
         int textureId = Window.getFrameBuffer().getTextureId();
-        ImGui.image(textureId, windowPos.x, windowPos.y, 0, 1, 1,0);//uvs are where you want to sample from the texture
+        ImGui.image(textureId, windowSize.x, windowSize.y, 0, 1, 1,0);//uvs are where you want to sample from the texture
 
         ImGui.end();
 
