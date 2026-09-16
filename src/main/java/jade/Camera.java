@@ -10,6 +10,8 @@ public class Camera {
     public Vector2f position; //2*2 matrix. this is the position of the camera in the world
     private Vector2f projectionSize = new Vector2f(32.0f * 40.0f, 32.0f * 21.0f);
 
+    private float zoom = 1.0f; //1.0 indicates no zoom
+
     public Camera(Vector2f position) {
         this.position = position;
         this.projectionMatrix = new Matrix4f();
@@ -22,7 +24,7 @@ public class Camera {
     //projection matrix sets window size
     public void adjustProjection(){
         projectionMatrix.identity(); //identity matrix(1 diagonal)
-        projectionMatrix.ortho(0.0f, projectionSize.x, 0.0f, projectionSize.y, 0.0f, 100.0f); //40 grid tiles wide that are 32*32 each and 21 tiles tall. left, right, bottom, top, zNear, zFar
+        projectionMatrix.ortho(0.0f, projectionSize.x * this.zoom, 0.0f, projectionSize.y * this.zoom, 0.0f, 100.0f); //40 grid tiles wide that are 32*32 each and 21 tiles tall. left, right, bottom, top, zNear, zFar
         projectionMatrix.invert(inverseProjection);//invert projection matrix and place it inside inverseProjection matrix
     }
 
@@ -55,4 +57,15 @@ public class Camera {
         return this.projectionSize;
     }
 
+    public float getZoom() {
+        return zoom;
+    }
+
+    public void setZoom(float zoom) {
+        this.zoom = zoom;
+    }
+
+    public void addZoom(float zoom) {
+        this.zoom += zoom;
+    }
 }

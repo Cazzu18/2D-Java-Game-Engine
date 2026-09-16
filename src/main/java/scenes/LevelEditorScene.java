@@ -28,12 +28,15 @@ public class LevelEditorScene extends Scene {
     @Override
     public void init() {
 
+        //creating camera
+        this.camera = new Camera(new Vector2f(-250, 0));
+
         LevelEditorThings.addComponent(new MouseControls());
         LevelEditorThings.addComponent(new GridLines());
+        LevelEditorThings.addComponent(new EditorCamera(this.camera));
 
         loadResources();
 
-        this.camera = new Camera(new Vector2f(-250, 0));
         sprites  = AssetPool.getSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png");
 
 
@@ -138,6 +141,7 @@ public class LevelEditorScene extends Scene {
 //        System.out.println("FPS: " + (1.0f/dt));
 
         LevelEditorThings.update(dt);
+        this.camera.adjustProjection();
         DebugDraw.addCircle(new Vector2f(x, y), 64, new Vector3f(1, 0, 0), 1);
         x += 50f * dt;
         y += 50f * dt;

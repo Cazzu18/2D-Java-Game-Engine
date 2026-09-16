@@ -31,7 +31,7 @@ public class PropertiesWindow {
 
     public void imgui(){
         if (activeGameObject!=null){
-            ImGui.begin("Inspector");
+            ImGui.begin("Properties");
             activeGameObject.imgui();// the game object we are inspecting
             ImGui.end();
         }
