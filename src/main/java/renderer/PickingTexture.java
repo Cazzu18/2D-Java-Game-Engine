@@ -10,10 +10,14 @@ public class PickingTexture {
     private int pickingTextureId;
     private int fbo;
     private int depthTexture; //NECESSARY FOR 3D
+    private float width;
+    private float height;
 
     //width and height will be the same size as game window(1920 * 1080)
     public PickingTexture(int width, int height) {
         assert init(width, height) : "Error initializing picking texture";
+        this.width = width;
+        this.height = height;
     }
 
     public boolean init(int width, int height){
@@ -72,6 +76,14 @@ public class PickingTexture {
         glReadPixels(x, y , 1, 1, GL_RGB, GL_FLOAT, pixels); //x and y represent what pixel we start from
 
         return (int) (pixels[0]) - 1;//index 0 gives us WRONG results
+    }
+
+    public float GetWidth(){
+        return this.width;
+    }
+
+    public float GetHeight(){
+        return this.height;
     }
 
 

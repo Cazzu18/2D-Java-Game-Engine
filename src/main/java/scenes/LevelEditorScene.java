@@ -37,12 +37,12 @@ public class LevelEditorScene extends Scene {
         sprites  = AssetPool.getSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png");
 
 
-        if(levelLoaded){
-            if(gameObjects.size() > 0){
-                this.activeGameObject = gameObjects.get(0);
-            }
-
-        }
+//        if(levelLoaded){
+//            if(gameObjects.size() > 0){
+//                this.activeGameObject = gameObjects.get(0);
+//            }
+//
+//        }
 //        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 400), new Vector2f(256, 256)), -1);
 //        obj2SpriteRenderer = new SpriteRenderer();
 //        obj2SpriteRenderer.setColor(new Vector4f(1, 0, 0, 1));

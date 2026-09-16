@@ -1,6 +1,7 @@
 package jade;
 
 import editor.GameViewWIndow;
+import editor.PropertiesWindow;
 import imgui.*;
 //import imgui.ImGui;
 //import imgui.ImGuiIO;
@@ -11,6 +12,7 @@ import imgui.flag.ImGuiWindowFlags;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.type.ImBoolean;
+import renderer.PickingTexture;
 import scenes.Scene;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -27,10 +29,16 @@ public class ImGuiLayer {
     private final long glfwWindow;
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
+
+    private GameViewWIndow gameViewWIndow;
+    private PropertiesWindow propertiesWindow;
+
     private static final String GLSL_VERSION = "#version 330 core";
 
-    public ImGuiLayer(long glfwWindow) {
+    public ImGuiLayer(long glfwWindow, PickingTexture pickingTexture) {
         this.glfwWindow = glfwWindow;
+        this.gameViewWIndow = new GameViewWIndow();
+        this.propertiesWindow = new PropertiesWindow(pickingTexture);
     }
 
     public void initImGui() {
@@ -81,9 +89,11 @@ public class ImGuiLayer {
         imGuiGl3.newFrame();
         ImGui.newFrame();
         setupDockspace();
-        currentScene.sceneImgui();//calling every frame
+        currentScene.imgui();//calling every frame
         //ImGui.showDemoWindow();
-        GameViewWIndow.imgui();
+        gameViewWIndow.imgui();
+        propertiesWindow.update(dt, currentScene);
+        propertiesWindow.imgui();
         ImGui.end();
         ImGui.render();
         imGuiGl3.renderDrawData(ImGui.getDrawData());
