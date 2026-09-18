@@ -12,6 +12,7 @@ public class GameObject {
     private List<Component> components;
     public Transform transform;
     private int zIndex;
+    private boolean doSerialization = true; //all objects serializable by default
 
     public GameObject(String name) {
         init(name, new Transform(), new ArrayList<>(), 0);
@@ -106,6 +107,12 @@ public class GameObject {
         return this.components;
     }
 
+    public void setNoSerialize(){
+        this.doSerialization = false;
+    }
 
+    public boolean doSerialization(){
+        return this.doSerialization;
+    }
 
 }

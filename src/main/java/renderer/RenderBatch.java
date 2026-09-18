@@ -3,6 +3,7 @@ package renderer;
 import components.SpriteRenderer;
 import jade.Window;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import util.AssetPool;
@@ -193,6 +194,22 @@ public class RenderBatch implements Comparable<RenderBatch>{
             }
         }
 
+        boolean isRotated = sprite.gameObject.transform.rotation != 0.0f;
+        Matrix4f transformMatrix = new Matrix4f().identity();
+
+
+        //translating is sliding a point or shape to a new location without changing size, shape, or direction
+        //scaling is the act of enlarging or shrinking shapes/sprites/models along coordinate axes
+        //we translate, rotate, and scale in that order because standard geometric transformation always happens relative to the world coordinate origin(scale, rotate, translate) or point(our case: t,r,s)
+        // by chaining the operation in this sequence we move an object's center to the origin, modify its size and orientation and then place it back to final position on screen
+        if(isRotated){
+            transformMatrix.translate(sprite.gameObject.transform.position.x,
+                    sprite.gameObject.transform.position.y, 0);
+            transformMatrix.rotate((float)Math.toRadians(sprite.gameObject.transform.rotation), 0, 0, 1); //we set z axis to 1 because we are rotating about it(2D rotation)
+            transformMatrix.scale(sprite.gameObject.transform.scale.x, sprite.gameObject.transform.scale.y, 1);
+
+        }
+
 
 
         //addd vertice with the appropriate properties
@@ -215,9 +232,18 @@ public class RenderBatch implements Comparable<RenderBatch>{
                 yAdd = 1.0f;
             }
 
+            Vector4f currentPos = new Vector4f(sprite.gameObject.transform.position.x + (xAdd * sprite.gameObject.transform.scale.x),
+                    sprite.gameObject.transform.position.y + (yAdd * sprite.gameObject.transform.scale.y),
+                    0, 1);
+
+            if(isRotated){
+                currentPos = new Vector4f(xAdd, yAdd, 0 ,1).mul(transformMatrix);
+            }
+
             //load position
-            vertices[offset] = sprite.gameObject.transform.position.x + (xAdd * sprite.gameObject.transform.scale.x);
-            vertices[offset + 1] = sprite.gameObject.transform.position.y + (yAdd * sprite.gameObject.transform.scale.y);
+            vertices[offset] = currentPos.x;
+            vertices[offset + 1] = currentPos.y;
+
             //load color
             vertices[offset + 2] = color.x;
             vertices[offset + 3] = color.y;

@@ -133,4 +133,8 @@ public class ImGuiLayer {
         ImGui.dockSpace(ImGui.getID("Dockspace"));
 
     }
+
+    public PropertiesWindow getPropertiesWindow() {
+        return this.propertiesWindow;
+    }
 }

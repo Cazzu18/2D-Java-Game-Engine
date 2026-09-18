@@ -3,10 +3,7 @@ package scenes;
 import components.*;
 import imgui.ImGui;
 import imgui.ImVec2;
-import jade.Camera;
-import jade.GameObject;
-import jade.Prefabs;
-import jade.Transform;
+import jade.*;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -28,17 +25,19 @@ public class LevelEditorScene extends Scene {
     @Override
     public void init() {
 
+        loadResources();
+        sprites  = AssetPool.getSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png");
+        Spritesheet gizmos = AssetPool.getSpritesheet("assets/images/gizmos.png");
+
         //creating camera
         this.camera = new Camera(new Vector2f(-250, 0));
 
         LevelEditorThings.addComponent(new MouseControls());
         LevelEditorThings.addComponent(new GridLines());
         LevelEditorThings.addComponent(new EditorCamera(this.camera));
+        LevelEditorThings.addComponent(new TranslateGizmo(gizmos.getSprite(1), Window.getImGuiLayer().getPropertiesWindow())); //this Window.get().getImGuiLayer().getPropertiesWindow() is horrible. We will update when we implement the Event system
 
-        loadResources();
-
-        sprites  = AssetPool.getSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png");
-
+        LevelEditorThings.start();
 
 //        if(levelLoaded){
 //            if(gameObjects.size() > 0){
@@ -103,6 +102,8 @@ public class LevelEditorScene extends Scene {
         AssetPool.addSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png",
                 new Spritesheet(AssetPool.getTexture("assets/images/spritesheets/decorationsAndBlocks.png"), 16, 16, 81, 0));
         AssetPool.getTexture("assets/images/blendImage2.png");
+
+        AssetPool.addSpritesheet("assets/images/gizmos.png", new Spritesheet(AssetPool.getTexture("assets/images/gizmos.png"), 24, 48, 2, 0)); //Might be 3 sprites
 
         //go through each game object and set texture to the one texture they should have from assetpool
         for (GameObject obj : gameObjects) {
@@ -169,6 +170,12 @@ public class LevelEditorScene extends Scene {
 
     @Override
     public void imgui(){
+
+        //For debug
+        ImGui.begin("Level Editor Things");
+        LevelEditorThings.imgui();
+        ImGui.end();
+
         ImGui.begin("Test Window");
 
         ImVec2 windowsPos = new ImVec2();
