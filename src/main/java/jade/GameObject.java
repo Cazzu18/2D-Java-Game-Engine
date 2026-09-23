@@ -1,6 +1,7 @@
 package jade;
 
 import components.Component;
+import imgui.ImGui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,30 +11,15 @@ public class GameObject {
     private int uid = -1;
     private String name;
     private List<Component> components;
-    public Transform transform;
-    private int zIndex;
+    public transient Transform transform;
     private boolean doSerialization = true; //all objects serializable by default
 
     public GameObject(String name) {
-        init(name, new Transform(), new ArrayList<>(), 0);
+        init(name, new ArrayList<>());
     }
 
-    public GameObject(String name, Transform transform, int zIndex) {
-        init(name, transform, new ArrayList<>(), zIndex);
-    }
-
-    public GameObject(String name, List<Component> components, int zIndex) {
-        init(name, new Transform(), components, zIndex);
-    }
-
-    public GameObject(String name, Transform transform, List<Component> components, int zIndex) {
-        init(name, transform, components, zIndex);
-    }
-
-    public void init(String name, Transform transform, List<Component> components, int zIndex) {
+    public void init(String name, List<Component> components) {
         this.name = name;
-        this.zIndex = zIndex;
-        this.transform = transform;
         this.components = components;
 
         this.uid = ID_COUNTER++;//might pose problems in the future
@@ -85,13 +71,10 @@ public class GameObject {
         }
     }
 
-    public int zIndex(){
-        return this.zIndex;
-    }
-
     public void imgui(){
         for(Component c : components){
-            c.imgui();
+            if(ImGui.collapsingHeader(c.getClass().getSimpleName()))
+                c.imgui();
         }
     }
 

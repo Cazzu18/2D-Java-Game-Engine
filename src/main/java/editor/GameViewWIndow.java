@@ -10,6 +10,7 @@ import org.joml.Vector2f;
 public class GameViewWIndow {
 
     private float leftX, rightX, topY, bottomY;
+    private boolean wantCaptureMouse;
 
     public void imgui(){
         ImGui.begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
@@ -35,13 +36,17 @@ public class GameViewWIndow {
         int textureId = Window.getFrameBuffer().getTextureId();
         ImGui.image(textureId, windowSize.x, windowSize.y, 0, 1, 1,0);//uvs are where you want to sample from the texture
 
+        //IsItemHovered() is a core function used to detect whether the mouse cursor is hovering over the immediately preceding widget in the execution flow
+        wantCaptureMouse = ImGui.isItemHovered();
+
         ImGui.end();
 
     }
 
     public boolean getWantCaptureMouse(){
-        return MouseListener.getX() >= leftX && MouseListener.getX() <= rightX
-                && MouseListener.getY() >= topY && MouseListener.getY() <= bottomY;
+//        return MouseListener.getX() >= leftX && MouseListener.getX() <= rightX
+//                && MouseListener.getY() >= topY && MouseListener.getY() <= bottomY;
+        return wantCaptureMouse;
     }
 
     private ImVec2 getLargestSizeForViewport(){

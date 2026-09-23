@@ -53,6 +53,8 @@ public class Gizmo extends Component {
     public void start(){
         this.xAxisObject.transform.rotation = 90;
         this.yAxisObject.transform.rotation = 180;
+        this.xAxisObject.transform.zIndex = 200;
+        this.yAxisObject.transform.zIndex = 200;
         this.xAxisObject.setNoSerialize();
         this.yAxisObject.setNoSerialize();
     }

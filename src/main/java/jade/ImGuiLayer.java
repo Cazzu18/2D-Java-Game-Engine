@@ -92,7 +92,7 @@ public class ImGuiLayer {
         currentScene.imgui();//calling every frame
         //ImGui.showDemoWindow();
         gameViewWIndow.imgui();
-        propertiesWindow.update(dt, currentScene);
+        propertiesWindow.update(dt, currentScene, gameViewWIndow.getWantCaptureMouse());
         propertiesWindow.imgui();
         ImGui.end();
         ImGui.render();

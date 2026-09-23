@@ -19,20 +19,23 @@ public class PropertiesWindow {
         this.pickingTexture = pickingTexture;
     }
 
-    public void update(float dt, Scene currentScene){
+    public void update(float dt, Scene currentScene, boolean canPick){
         debounceTime -= dt;
 
         if(MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && debounceTime < 0){
             int x = (int)MouseListener.getScreenX();
             int y = (int)MouseListener.getScreenY();
+
+            if(x < 0 || x >= pickingTexture.GetWidth() || y < 0 || y >= pickingTexture.GetHeight()){
+                return;
+            }
+
             int gameObjectId = pickingTexture.readPixel(x,y);
+
             GameObject pickedObj = currentScene.getGameObject(gameObjectId);
 
             if(pickedObj != null && pickedObj.getComponent(NonPickable.class) == null){
-                //TODO: Verify the PickingTexture GetWidth and GetHeight function!
-                if(!(x < 0 || x > pickingTexture.GetWidth() || y < 0 || y > pickingTexture.GetHeight())){
-                    activeGameObject = pickedObj; // pickingTexture.readPixel RETURNS THE ID OF A GAMEOBJECT
-                }
+                activeGameObject = pickedObj; // pickingTexture.readPixel RETURNS THE ID OF A GAMEOBJECT
             } else if(pickedObj == null && !MouseListener.isDragging()){
                 activeGameObject = null;
             }
