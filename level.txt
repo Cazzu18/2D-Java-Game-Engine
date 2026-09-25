@@ -57,6 +57,22 @@
           },
           "uid": 20
         }
+      },
+      {
+        "type": "physics2d.components.Rigidbody2D",
+        "properties": {
+          "velocity": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "angularDamping": 0.8,
+          "linearDamping": 0.9,
+          "mass": 0.0,
+          "bodyType": "Dynamic",
+          "fixedRotation": false,
+          "continuousCollision": true,
+          "uid": 67
+        }
       }
     ],
     "doSerialization": true
@@ -255,14 +271,14 @@
         "type": "jade.Transform",
         "properties": {
           "position": {
-            "x": 545.75244,
-            "y": 477.7143
+            "x": 254.32391,
+            "y": 386.28568
           },
           "scale": {
-            "x": 32.0,
-            "y": 32.0
+            "x": 110.36737,
+            "y": 117.71423
           },
-          "rotation": 189.2,
+          "rotation": 0.0,
           "zIndex": 130,
           "uid": 27
         }
@@ -317,12 +333,12 @@
         "type": "jade.Transform",
         "properties": {
           "position": {
-            "x": 352.0,
-            "y": 320.0
+            "x": 452.4082,
+            "y": 352.0
           },
           "scale": {
-            "x": 32.0,
-            "y": 32.0
+            "x": 170.36731,
+            "y": 121.14285
           },
           "rotation": 0.0,
           "zIndex": 0,
@@ -366,6 +382,40 @@
             ]
           },
           "uid": 48
+        }
+      },
+      {
+        "type": "physics2d.components.Box2DCollider",
+        "properties": {
+          "halfSize": {
+            "x": 1.0,
+            "y": 1.0
+          },
+          "origin": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "uid": 86
+        }
+      },
+      {
+        "type": "physics2d.components.Rigidbody2D",
+        "properties": {
+          "velocity": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "angularDamping": 0.8,
+          "linearDamping": 0.9,
+          "mass": 0.0,
+          "bodyType": "Dynamic",
+          "fixedRotation": false,
+          "continuousCollision": true,
+          "uid": 87
         }
       }
     ],

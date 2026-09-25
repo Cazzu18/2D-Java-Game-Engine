@@ -5,6 +5,8 @@ import org.jbox2d.dynamics.Body;
 import org.joml.Vector2f;
 import physics2d.enums.BodyType;
 
+//A rigidbody is a physics component in game engines that allows an object's movement to be controlled by simulated gravity, forces, and collisions(from the physics engine)
+
 public class Rigidbody2D extends Component {
     private Vector2f velocity = new Vector2f();
     private float angularDamping = 0.8f;
