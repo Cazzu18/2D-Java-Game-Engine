@@ -1,7 +1,9 @@
 package jade;
 
-import editor.GameViewWIndow;
+import editor.GameViewWindow;
 import editor.PropertiesWindow;
+import editor.MenuBar;
+
 import imgui.*;
 //import imgui.ImGui;
 //import imgui.ImGuiIO;
@@ -14,7 +16,6 @@ import imgui.gl3.ImGuiImplGl3;
 import imgui.type.ImBoolean;
 import renderer.PickingTexture;
 import scenes.Scene;
-
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
@@ -30,15 +31,17 @@ public class ImGuiLayer {
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
 
-    private GameViewWIndow gameViewWIndow;
+    private GameViewWindow gameViewWIndow;
     private PropertiesWindow propertiesWindow;
+    private MenuBar menuBar;
 
     private static final String GLSL_VERSION = "#version 330 core";
 
     public ImGuiLayer(long glfwWindow, PickingTexture pickingTexture) {
         this.glfwWindow = glfwWindow;
-        this.gameViewWIndow = new GameViewWIndow();
+        this.gameViewWIndow = new GameViewWindow();
         this.propertiesWindow = new PropertiesWindow(pickingTexture);
+        this.menuBar = new MenuBar();
     }
 
     public void initImGui() {
@@ -94,6 +97,7 @@ public class ImGuiLayer {
         gameViewWIndow.imgui();
         propertiesWindow.update(dt, currentScene, gameViewWIndow.getWantCaptureMouse());
         propertiesWindow.imgui();
+        menuBar.imgui();
         ImGui.end();
         ImGui.render();
         imGuiGl3.renderDrawData(ImGui.getDrawData());

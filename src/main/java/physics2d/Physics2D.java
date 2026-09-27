@@ -93,6 +93,15 @@ public class Physics2D {
         }
     }
 
+    public void destroyGameObject(GameObject go){
+        Rigidbody2D rb = go.getComponent(Rigidbody2D.class);
+        //minute 32
+        if(rb != null && rb.getRawBody() == null){
+            world.destroyBody(rb.getRawBody());
+            rb.setRawBody(null);
+        }
+    }
+
     public void update(float dt){
 
         //frames can run in 16ms ms 17ms 20ms etc...
@@ -106,6 +115,11 @@ public class Physics2D {
         physicsTime += dt;
         if(physicsTime >= 0.0f){
             physicsTime -= physicsTimeStep;
+
+            //world.step() function in JBox2D advances the physics simulation forward by a specific time interval, handling collision detection, forces, and movement
+            //Time Step (dt): The amount of time to simulate, usually set to a fixed value like 1/60f for a 60Hz frame rate.
+            // Velocity Iterations: Controls how accurately the velocity constraints and collisions are resolved. Higher numbers mean more precision but use more CPU power (typically 6–8).
+            // Position Iterations: Controls how accurately body positions are solved to stop objects from overlapping (typically 3–4)
             world.step(physicsTimeStep, velocityIterations, positionIterations);
         }
     }

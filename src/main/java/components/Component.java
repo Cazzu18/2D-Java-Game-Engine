@@ -25,6 +25,11 @@ public abstract class Component {
 
     }
 
+    //can be overridden
+    public void editorUpdate(float dt){
+
+    }
+
     public void imgui(){
         try {
             Field[] fields = this.getClass().getDeclaredFields(); //getting fields of the subclass running the component
@@ -98,5 +103,10 @@ public abstract class Component {
     //loading levels
     public static void init(int maxId){
         ID_COUNTER = maxId;
+    }
+
+    //can be overridden
+    public void destroy(){
+
     }
 }

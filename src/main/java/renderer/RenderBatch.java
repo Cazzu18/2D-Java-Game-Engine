@@ -1,6 +1,7 @@
 package renderer;
 
 import components.SpriteRenderer;
+import jade.GameObject;
 import jade.Window;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
@@ -170,6 +171,26 @@ public class RenderBatch implements Comparable<RenderBatch>{
         }
 
         shader.detach();
+    }
+
+    public boolean destroyIfExists(GameObject go){
+        SpriteRenderer sprite = go.getComponent(SpriteRenderer.class);
+        for(int i = 0; i < numSprites; i++){
+            if(sprites[i] == sprite){
+                //[ 1, 2, 3, 4, 5, 6, ,7, ...]
+                //[1, 2, 4, 5, 6, 7, ..] Shifting all subsequent sprites to left
+                for(int j = 0; j < numSprites - 1; j++){
+                    sprites[j] = sprites[j + 1];
+                    sprites[j].setDirty();
+                }
+
+                numSprites--;
+                return true;
+            }
+
+        }
+
+        return false;
     }
 
     private void loadVertexProperties(int index){

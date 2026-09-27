@@ -20,7 +20,7 @@ public class MouseControls extends Component {
     }
 
     @Override
-    public void update(float dt){
+    public void editorUpdate(float dt){
         if(holdingObject != null){ //check if mouse controlls holding something
 
             //snap object position to mouse positions

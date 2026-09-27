@@ -13,6 +13,7 @@ public class GameObject {
     private List<Component> components;
     public transient Transform transform;
     private boolean doSerialization = true; //all objects serializable by default
+    private boolean isDead = false;
 
     public GameObject(String name) {
         init(name, new ArrayList<>());
@@ -65,6 +66,12 @@ public class GameObject {
         }
     }
 
+    public void editorUpdate(float dt){
+        for(int i=0; i < components.size(); i++){
+            components.get(i).editorUpdate(dt); //the update function of the GameObject class calls the update function of every individual component in the List
+        }
+    }
+
     public void start(){
         for(int i =0; i < components.size(); i++){
             components.get(i).start();//the start function of the GameObject class calls the start function of every individual component in the List
@@ -76,6 +83,17 @@ public class GameObject {
             if(ImGui.collapsingHeader(c.getClass().getSimpleName()))
                 c.imgui();
         }
+    }
+
+    public void destroy(){
+        this.isDead = true;
+        for(int i=0; i < components.size(); i++){
+            components.get(i).destroy();
+        }
+    }
+
+    public boolean isDead(){
+        return this.isDead;
     }
 
     public static void init(int maxID){
