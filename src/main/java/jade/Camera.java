@@ -8,7 +8,10 @@ public class Camera {
 
     private Matrix4f projectionMatrix, viewMatrix, inverseProjection, inverseView; //4f means 4*4
     public Vector2f position; //2*2 matrix. this is the position of the camera in the world
-    private Vector2f projectionSize = new Vector2f(32.0f * 40.0f, 32.0f * 21.0f);
+
+    private float projectionWidth = 6;
+    private float projectionHeight = 3;
+    private Vector2f projectionSize = new Vector2f(projectionWidth, projectionHeight);//projection shrunk
 
     private float zoom = 1.0f; //1.0 indicates no zoom
 

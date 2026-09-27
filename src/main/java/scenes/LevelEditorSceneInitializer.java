@@ -192,7 +192,7 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
             //ImGui.pushID(i);
             if(ImGui.imageButton("sprite_" + i, (long) id, size, uv0, uv1)){
                 System.out.println("Button " + i + " Clicked");
-                GameObject object = Prefabs.generateSpriteObject(sprite, 32, 32);
+                GameObject object = Prefabs.generateSpriteObject(sprite, 0.25f, 0.25f);
 
                 //Attach to mouse cursor
                 LevelEditorThings.getComponent(MouseControls.class).pickupObject(object);

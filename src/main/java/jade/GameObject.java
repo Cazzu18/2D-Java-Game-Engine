@@ -1,7 +1,12 @@
 package jade;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import components.Component;
+import components.ComponentDeserializer;
+import components.SpriteRenderer;
 import imgui.ImGui;
+import util.AssetPool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,6 +119,32 @@ public class GameObject {
 
     public boolean doSerialization(){
         return this.doSerialization;
+    }
+
+    public void generateUid(){
+        this.uid = ID_COUNTER++;
+    }
+
+    public GameObject copy(){
+        //TODO: find cleaner solution
+        Gson gson = new GsonBuilder().registerTypeAdapter(Component.class, new ComponentDeserializer()).registerTypeAdapter(GameObject.class, new GameObjectDeserializer()).create();//.create() is important
+
+        String objAsJson = gson.toJson(this); //serializing game object into a string
+        GameObject obj = gson.fromJson(objAsJson, GameObject.class); // deserialize
+        obj.generateUid();
+
+        for(Component c : obj.getAllComponents()){
+            c.generateID();
+        }
+
+        SpriteRenderer sprite = obj.getComponent(SpriteRenderer.class);
+        if(sprite != null && sprite.getTexture() != null){
+            //reseting obj references
+            sprite.setTexture(AssetPool.getTexture(sprite.getTexture().getFilepath()));
+        }
+
+        return obj;
+
     }
 
 }

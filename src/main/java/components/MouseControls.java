@@ -24,8 +24,8 @@ public class MouseControls extends Component {
         if(holdingObject != null){ //check if mouse controlls holding something
 
             //snap object position to mouse positions
-            holdingObject.transform.position.x = MouseListener.getOrthoX() - 16;//subtract 16 so that centered on the mouse
-            holdingObject.transform.position.y = MouseListener.getOrthoY() - 16;
+            holdingObject.transform.position.x = MouseListener.getOrthoX() - 0.125f;//subtract 0.125f so that centered on the mouse
+            holdingObject.transform.position.y = MouseListener.getOrthoY() - 0.125f;
             holdingObject.transform.position.x = (int)(holdingObject.transform.position.x / Settings.GRID_WIDTH) * Settings.GRID_WIDTH;
             holdingObject.transform.position.y = (int)(holdingObject.transform.position.y / Settings.GRID_HEIGHT) * Settings.GRID_HEIGHT;
 
