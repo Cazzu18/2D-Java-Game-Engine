@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Renderer {
-    private final int MAX_BATCH_SIZE = 1000;//increasing this increases performance
+    private final int MAX_BATCH_SIZE = 1500;//increasing this increases performance
     private List<RenderBatch> batches;
     private static Shader currentShader; //global shader
 
