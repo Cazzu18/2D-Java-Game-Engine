@@ -1,6 +1,6 @@
 [
   {
-    "uid": 32,
+    "uid": 16,
     "name": "Sprite_Object_Gen",
     "components": [
       {
@@ -92,8 +92,8 @@
     "isDead": false
   },
   {
-    "uid": 33,
-    "name": "Sprite_Object_Gen",
+    "uid": 17,
+    "name": "Purple Boxes",
     "components": [
       {
         "type": "jade.Transform",
@@ -184,7 +184,7 @@
     "isDead": false
   },
   {
-    "uid": 34,
+    "uid": 18,
     "name": "Sprite_Object_Gen",
     "components": [
       {

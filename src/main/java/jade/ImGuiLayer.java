@@ -125,7 +125,6 @@ public class ImGuiLayer {
         ImGui.render();
         imGuiGl3.renderDrawData(ImGui.getDrawData());
 
-        //if viewports enabled worked
         //get current window and ImGui update platform window and render to all those and then backup to current
         long backupWindowPtr = glfwGetCurrentContext();
         ImGui.updatePlatformWindows();
