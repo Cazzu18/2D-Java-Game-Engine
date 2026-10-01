@@ -16,32 +16,41 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import org.lwjgl.BufferUtils;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
 
 public class RenderBatch implements Comparable<RenderBatch>{
 
     //Vertex
     //=========
-    // Pos(x, y)        Color(rgba)                     tex coords      tex id
-    // float, float,    float, float, float, float      float, float    float
-    private final int POS_SIZE = 2;
-    private final int COLOR_SIZE = 4;
-    private final int TEX_COORDS_SIZE = 2;
-    private final int TEX_ID_SIZE = 1;
-    private final int ENTITY_ID_SIZE = 1;
+    // Pos(x, y)        Color(rgba)                     tex coords      tex id      Entity id
+    // float, float,    byte, byte, byte, byte          float, float    float       float
 
-    private final int POS_OFFSET = 0;
-    private final int COLOR_OFFSET = POS_OFFSET + POS_SIZE * Float.BYTES;
-    private final int TEX_COORDS_OFFSET = COLOR_OFFSET + COLOR_SIZE * Float.BYTES;
-    private final int TEX_ID_OFFSET = TEX_COORDS_OFFSET + TEX_COORDS_SIZE * Float.BYTES;
-    private final int ENTITY_ID_OFFSET = TEX_ID_OFFSET + TEX_ID_SIZE * Float.BYTES;
+    //2026-09-28 EHL Optimizing by only using 4 unsigned byes(one for each channel)
+    //This optimization reduces color storage from 128 bits(16 bytes) to 32 bits(4 bytes) and Vertex size from 40 bytes to 28
+    private static final int POS_SIZE = 2;
+    private static final int COLOR_SIZE = 4;       // Four unsigned bytes: R, G, B, A
+    private static final int TEX_COORDS_SIZE = 2;
+    private static final int TEX_ID_SIZE = 1;
+    private static final int ENTITY_ID_SIZE = 1;
 
-    private final int VERTEX_SIZE =  10;
-    private final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
+    private static final int POS_OFFSET = 0;
+    private static final int COLOR_OFFSET = POS_OFFSET + POS_SIZE * Float.BYTES;              // 8
+    private static final int TEX_COORDS_OFFSET = COLOR_OFFSET + COLOR_SIZE * Byte.BYTES;      // 12. Using Bytes instead of floats
+    private static final int TEX_ID_OFFSET = TEX_COORDS_OFFSET + TEX_COORDS_SIZE * Float.BYTES; // 20
+    private static final int ENTITY_ID_OFFSET = TEX_ID_OFFSET + TEX_ID_SIZE * Float.BYTES;   // 24
+    private static final int VERTEX_SIZE_BYTES = ENTITY_ID_OFFSET + ENTITY_ID_SIZE * Float.BYTES; // 28
+
+    //2026-09-28 EHL using a byte buffer for vertices instead of an array of floats
+    private ByteBuffer vertices;
 
     private SpriteRenderer[] sprites;
     private int numSprites;
     private boolean hasRoom;
-    private float[] vertices;
+    //private float[] vertices;
     private int[] texSlots = {0, 1, 2, 3, 4, 5, 6, 7};
 
     private List<Texture> textures;
@@ -61,8 +70,10 @@ public class RenderBatch implements Comparable<RenderBatch>{
         this.sprites = new SpriteRenderer[maxBatchSize];//maxBatchSize specifies how many quads the batch can hold
         this.maxBatchSize = maxBatchSize;
 
-        //4 vertices quads
-        vertices = new float[maxBatchSize * 4 * VERTEX_SIZE]; //because we have 4 vertices per quad, gonna store maxBatchSize sprites, and each vertex has a size of 6(x,y      rgba)
+        //creating a byte buffer instead of initializing a new array of floats. Each sprite has 4 vertices and each vertex is now 28bytes so a 1,500 sprite batch reserves 168,00bytes
+        vertices = BufferUtils.createByteBuffer(maxBatchSize * 4 * VERTEX_SIZE_BYTES);
+        //redundant but explicit
+        vertices.order(ByteOrder.nativeOrder());
 
 
         this.numSprites = 0;
@@ -80,7 +91,7 @@ public class RenderBatch implements Comparable<RenderBatch>{
         //allocating space for the vertices
         vboID = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferData(GL_ARRAY_BUFFER, vertices.length * Float.BYTES, GL_DYNAMIC_DRAW);//target, size, usage. DYNAMIC draw because vertices can change
+        glBufferData(GL_ARRAY_BUFFER, (long) vertices.capacity(), GL_DYNAMIC_DRAW);
 
 
         //Create and upload indices buffer
@@ -94,7 +105,10 @@ public class RenderBatch implements Comparable<RenderBatch>{
         glVertexAttribPointer(0, POS_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, POS_OFFSET);//POS OFFSET IS THE POINTER
         glEnableVertexAttribArray(0);
 
-        glVertexAttribPointer(1, COLOR_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, COLOR_OFFSET);//VERTEX_SIZE_BYTES IS THE STRIDE
+//        glVertexAttribPointer(1, COLOR_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, COLOR_OFFSET);//VERTEX_SIZE_BYTES IS THE STRIDE
+//        glEnableVertexAttribArray(1);
+        //true(for normalized parameter) tells OpenGL to convert each unsigned color byte from 0–255 to a float in 0.0–1.0 before passing it to the shader’s(default.glsl) vec4 aColor
+        glVertexAttribPointer(1, COLOR_SIZE, GL_UNSIGNED_BYTE, true, VERTEX_SIZE_BYTES, COLOR_OFFSET);
         glEnableVertexAttribArray(1);
 
         glVertexAttribPointer(2, TEX_COORDS_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, TEX_COORDS_OFFSET);
@@ -149,7 +163,10 @@ public class RenderBatch implements Comparable<RenderBatch>{
 
         if(rebufferData){
             glBindBuffer(GL_ARRAY_BUFFER, vboID);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);//buffer from vertices starting from 0
+            ByteBuffer upload = vertices.duplicate();
+            upload.clear();
+            upload.limit(numSprites * 4 * VERTEX_SIZE_BYTES);
+            glBufferSubData(GL_ARRAY_BUFFER, 0L, upload);
         }
 
         //use shader
@@ -207,10 +224,11 @@ public class RenderBatch implements Comparable<RenderBatch>{
         SpriteRenderer sprite = this.sprites[index];
 
         //find offset within array(4 vertices per sprite)
-        int offset = index * 4 * VERTEX_SIZE;
+        int offset = index * 4 * VERTEX_SIZE_BYTES;
         //float float       float float float float
 
-        Vector4f color = sprite.getColor();
+        //Vector4f color = sprite.getColor();
+        int color = sprite.getColor();
         Vector2f[] texCoords = sprite.getTexCoords();
 
         int texId = 0;
@@ -271,27 +289,44 @@ public class RenderBatch implements Comparable<RenderBatch>{
                 currentPos = new Vector4f(xAdd, yAdd, 0 ,1).mul(transformMatrix);
             }
 
-            //load position
-            vertices[offset] = currentPos.x;
-            vertices[offset + 1] = currentPos.y;
+//            //load position
+//            vertices[offset] = currentPos.x;
+//            vertices[offset + 1] = currentPos.y;
+//
+//            //load color
+//            vertices[offset + 2] = color;
+////            vertices[offset + 3] = color.y;
+////            vertices[offset + 4] = color.z;
+////            vertices[offset + 5] = color.w;
+//
+//            //load texture coordinates
+//            vertices[offset + 3] = texCoords[i].x;
+//            vertices[offset + 4] = texCoords[i].y;
+//
+//            //load texture id
+//            vertices[offset + 5] = texId;
+//
+//            //Load entity id
+//            vertices[offset + 6] = sprite.gameObject.getUid() + 1; //+1 because we are using 0 as a flag that object is invalid/outside
+//
+//            offset += VERTEX_SIZE;
 
-            //load color
-            vertices[offset + 2] = color.x;
-            vertices[offset + 3] = color.y;
-            vertices[offset + 4] = color.z;
-            vertices[offset + 5] = color.w;
+            vertices.putFloat(offset + POS_OFFSET, currentPos.x);
+            vertices.putFloat(offset + POS_OFFSET + Float.BYTES, currentPos.y);
 
-            //load texture coordinates
-            vertices[offset + 6] = texCoords[i].x;
-            vertices[offset + 7] = texCoords[i].y;
+            // Java color is 0xAARRGGBB. Write bytes explicitly in RGBA order.
+            //>>> is the unsigned right shift
+            vertices.put(offset + COLOR_OFFSET,     (byte) ((color >>> 16) & 0xFF)); //moving alpha data to the lowest bits and masking with 0xFF(255 in decimal and 11111111 in binary) in ording to get only alpha values
+            vertices.put(offset + COLOR_OFFSET + 1, (byte) ((color >>> 8) & 0xFF));
+            vertices.put(offset + COLOR_OFFSET + 2, (byte) ( color         & 0xFF));
+            vertices.put(offset + COLOR_OFFSET + 3, (byte) ((color >>> 24) & 0xFF));
 
-            //load texture id
-            vertices[offset + 8] = texId;
+            vertices.putFloat(offset + TEX_COORDS_OFFSET, texCoords[i].x);
+            vertices.putFloat(offset + TEX_COORDS_OFFSET + Float.BYTES, texCoords[i].y);
+            vertices.putFloat(offset + TEX_ID_OFFSET, texId);
+            vertices.putFloat(offset + ENTITY_ID_OFFSET, sprite.gameObject.getUid() + 1.0f); ////+1 because we are using 0 as a flag that object is invalid/outside
 
-            //Load entity id
-            vertices[offset + 9] = sprite.gameObject.getUid() + 1; //+1 because we are using 0 as a flag that object is invalid/outside
-
-            offset += VERTEX_SIZE;
+            offset += VERTEX_SIZE_BYTES;
 
         }
 

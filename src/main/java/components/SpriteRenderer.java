@@ -5,10 +5,12 @@ import jade.Transform;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import renderer.Texture;
+import util.JMath;
 
 public class SpriteRenderer extends Component {
 
-    private Vector4f color = new Vector4f(1, 1, 1, 1);
+    //private Vector4f color = new Vector4f(1, 1, 1, 1);
+    private int color = 0xFFFFFFFF; //using 32 bit integer to represent rgba
     private Sprite sprite = new Sprite();
 
     private transient Transform lastTransform;//transient is a field modifier that indicates a variable should not be included in the default serialization process
@@ -47,10 +49,14 @@ public class SpriteRenderer extends Component {
         }
     }
 
+    private static final JMath COLOR_MATH = new JMath();
+
     @Override
-    public void imgui(){
-        if(JImGui.colorPicker4("Color Picker", this.color)){
-            this.isDirty = true;
+    public void imgui() {
+        Vector4f editedColor = COLOR_MATH.Int32ToVector4f(this.color);
+
+        if (JImGui.colorPicker4("Color Picker", editedColor)) {
+            setColor(COLOR_MATH.Vector4fToInt32(editedColor));
         }
     }
 
@@ -58,7 +64,11 @@ public class SpriteRenderer extends Component {
         this.isDirty = true;
     }
 
-    public Vector4f getColor() {
+//    public Vector4f getColor() {
+//        return color;
+//    }
+
+    public int getColor() {
         return color;
     }
 
@@ -75,9 +85,16 @@ public class SpriteRenderer extends Component {
         this.isDirty = true;
     }
 
-    public void setColor(Vector4f color){
-        if(!this.color.equals(color)){
-            this.color.set(color);
+//    public void setColor(Vector4f color){
+//        if(!this.color.equals(color)){
+//            this.color.set(color);
+//            this.isDirty = true;
+//        }
+//    }
+
+    public void setColor(int color){
+        if(this.color != color){
+            this.color = color;
             this.isDirty = true;
         }
     }

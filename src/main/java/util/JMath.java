@@ -1,6 +1,7 @@
 package util;
 
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 
 public class JMath {
 
@@ -35,5 +36,29 @@ public class JMath {
 
     public static boolean compare(Vector2f vec1, Vector2f vec2) {
         return compare(vec1.x, vec2.x) && compare(vec1.y, vec2.y);
+    }
+
+    private static int toByte(float channel){
+        float clamped = Math.max(0.0f, Math.min(1.0f, channel));
+        return Math.round(clamped * 255.0f);
+    }
+
+    public int Vector4fToInt32(Vector4f color){
+        int alpha = toByte(color.w);
+        int red = toByte(color.x);
+        int green = toByte(color.y);
+        int blue = toByte(color.z);
+
+        return (alpha << 24) | (red << 16) | (green << 8) | blue; //0xAARRGGBB
+    }
+
+    //ImGui picker needs values from 0 to 1
+    public Vector4f Int32ToVector4f(int argb) {
+        float r = ((argb >>> 16) & 0xFF) / 255.0f;
+        float g = ((argb >>> 8)  & 0xFF) / 255.0f;
+        float b = ( argb         & 0xFF) / 255.0f;
+        float a = ((argb >>> 24) & 0xFF) / 255.0f;
+
+        return new Vector4f(r, g, b, a);
     }
 }

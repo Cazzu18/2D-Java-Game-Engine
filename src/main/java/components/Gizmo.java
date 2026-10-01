@@ -4,6 +4,7 @@ import editor.PropertiesWindow;
 import jade.*;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
+import util.JMath;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -118,14 +119,14 @@ public class Gizmo extends Component {
     }
 
     private void setActive(){
-        this.xAxisSprite.setColor(xAxisColor);
-        this.yAxisSprite.setColor(yAxisColor);
+        this.xAxisSprite.setColor(new JMath().Vector4fToInt32(xAxisColor));
+        this.yAxisSprite.setColor(new JMath().Vector4fToInt32(yAxisColor));
     }
 
     private void setInactive(){
         this.activeGameObject = null;
-        this.xAxisSprite.setColor(new Vector4f(0,0,0,0));
-        this.yAxisSprite.setColor(new Vector4f(0,0,0,0));
+        this.xAxisSprite.setColor(new JMath().Vector4fToInt32(new Vector4f(0, 0, 0, 0)));
+        this.yAxisSprite.setColor(new JMath().Vector4fToInt32(new Vector4f(0, 0, 0, 0)));
     }
 
     private boolean checkXHoverState(){
@@ -137,11 +138,11 @@ public class Gizmo extends Component {
                 mousePos.y >= xAxisObject.transform.position.y - (gizmoHeight / 2.0f) &&
                 mousePos.y <= xAxisObject.transform.position.y + (gizmoWidth / 2.0f))
         {
-            xAxisSprite.setColor(xAxisColorHover);
+            xAxisSprite.setColor(new JMath().Vector4fToInt32(xAxisColorHover));
             return true;
         }
 
-        xAxisSprite.setColor(xAxisColor);
+        xAxisSprite.setColor(new JMath().Vector4fToInt32(xAxisColor));
         return false;
     }
 
@@ -154,11 +155,11 @@ public class Gizmo extends Component {
                 mousePos.y <= yAxisObject.transform.position.y + (gizmoHeight / 2.0f) &&
                 mousePos.y >= yAxisObject.transform.position.y - (gizmoHeight / 2.0f))
         {
-            yAxisSprite.setColor(yAxisColorHover);
+            yAxisSprite.setColor(new JMath().Vector4fToInt32(yAxisColorHover));
             return true;
         }
 
-        yAxisSprite.setColor(yAxisColor);
+        yAxisSprite.setColor(new JMath().Vector4fToInt32(yAxisColor));
         return false;
     }
 
