@@ -47,6 +47,32 @@ uniform sampler2D uTextures[8];
 
 out vec4 color;
 
+//vec4 intToVec4(int color) {
+//    // 1. Extract components using bitwise operations
+//    // 2. Cast to float and divide by 255.0 to normalize the color between 0.0 and 1.0
+//    float a = float((color >> 24) & 0xFF) / 255.0;
+//    float r = float((color >> 16) & 0xFF) / 255.0;
+//    float g = float((color >> 8)  & 0xFF) / 255.0;
+//    float b = float(color         & 0xFF) / 255.0;
+//
+//    // 3. Return a native GLSL 4-component vector (Red, Green, Blue, Alpha)
+//    return vec4(r, g, b, a);
+//}
+//
+//int Vec4ToInt(vec4 vec){
+//    // 1. Convert normalized floats (0.0 to 1.0) back to 0-255 integers
+//    // 2. Use swizzling (.a, .r, .g, .b) to access components cleanly
+//    int alpha = int(vec.a * 255.0);
+//    int red   = int(vec.r * 255.0);
+//    int green = int(vec.g * 255.0);
+//    int blue  = int(vec.b * 255.0);
+//
+//    // 3. Pack them together using bitwise OR operations
+//    int argb = (alpha << 24) | (red << 16) | (green << 8) | blue;
+//
+//    return argb;
+//}
+
 void main(){
     if(fTexId > 0){
         int id = int(fTexId);
