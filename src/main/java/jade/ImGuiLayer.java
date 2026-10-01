@@ -4,6 +4,7 @@ import editor.GameViewWindow;
 import editor.PropertiesWindow;
 import editor.MenuBar;
 
+import editor.SceneHierarchyWindow;
 import imgui.*;
 //import imgui.ImGui;
 //import imgui.ImGuiIO;
@@ -17,6 +18,9 @@ import imgui.type.ImBoolean;
 import renderer.PickingTexture;
 import scenes.Scene;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
+import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 
 /**
  * Dear ImGui layer for imgui-java 1.90.0 + LWJGL 3.3.6.
@@ -34,6 +38,7 @@ public class ImGuiLayer {
     private GameViewWindow gameViewWIndow;
     private PropertiesWindow propertiesWindow;
     private MenuBar menuBar;
+    private SceneHierarchyWindow sceneHierarchyWindow;
 
     private static final String GLSL_VERSION = "#version 330 core";
 
@@ -42,6 +47,7 @@ public class ImGuiLayer {
         this.gameViewWIndow = new GameViewWindow();
         this.propertiesWindow = new PropertiesWindow(pickingTexture);
         this.menuBar = new MenuBar();
+        this.sceneHierarchyWindow = new SceneHierarchyWindow();
     }
 
     public void initImGui() {
@@ -55,7 +61,7 @@ public class ImGuiLayer {
         //so I don't overwrite flags accidentally.
         io.addConfigFlags(ImGuiConfigFlags.NavEnableKeyboard);
         io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
-        //io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
+        io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
 
         //Init backends:
         //- true = install GLFW callbacks (recommended)
@@ -97,18 +103,35 @@ public class ImGuiLayer {
         gameViewWIndow.imgui();
         propertiesWindow.update(dt, currentScene, gameViewWIndow.getWantCaptureMouse());
         propertiesWindow.imgui();
-        menuBar.imgui();
+        sceneHierarchyWindow.imgui();
         ImGui.end();
+        endFrame();
+
+        //Multi-viewport support (only runs if enabled)
+//        if (ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
+//            long backup = glfwGetCurrentContext();
+//            ImGui.updatePlatformWindows();
+//            ImGui.renderPlatformWindowsDefault();
+//            glfwMakeContextCurrent(backup);
+//        }
+    }
+
+    private void endFrame() {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);//unbind any framebuffers currently on the window
+        glViewport(0, 0, Window.getWidth(), Window.getHeight());
+        glClearColor(0, 0, 0, 1); //black
+        glClear(GL_COLOR_BUFFER_BIT);
+
         ImGui.render();
         imGuiGl3.renderDrawData(ImGui.getDrawData());
 
-        //Multi-viewport support (only runs if enabled)
-        if (ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
-            long backup = glfwGetCurrentContext();
-            ImGui.updatePlatformWindows();
-            ImGui.renderPlatformWindowsDefault();
-            glfwMakeContextCurrent(backup);
-        }
+        //if viewports enabled worked
+        //get current window and ImGui update platform window and render to all those and then backup to current
+        long backupWindowPtr = glfwGetCurrentContext();
+        ImGui.updatePlatformWindows();
+        ImGui.renderPlatformWindowsDefault();
+        glfwMakeContextCurrent(backupWindowPtr);
+
     }
 
     /** Cleanup. Call on shutdown. */
@@ -121,7 +144,13 @@ public class ImGuiLayer {
     public void setupDockspace() {
         //"parent" window
         int windowFlags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking;
-        ImGui.setNextWindowPos(0.0f, 0.0f, ImGuiCond.Always); //start at topleft and make sure its window width and window height
+
+        ImGuiViewport mainViewport = ImGui.getMainViewport();
+        ImGui.setNextWindowPos(mainViewport.getWorkPosX(), mainViewport.getWorkPosY());
+        ImGui.setNextWindowSize(mainViewport.getWorkSizeX(), mainViewport.getWorkSizeY());
+        ImGui.setNextWindowViewport(mainViewport.getID());
+
+        ImGui.setNextWindowPos(0.0f, 0.0f); //start at topleft and make sure its window width and window height
         ImGui.setNextWindowSize(Window.getWidth(), Window.getHeight());
         ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
         ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
@@ -135,6 +164,10 @@ public class ImGuiLayer {
 
         //Dockspace
         ImGui.dockSpace(ImGui.getID("Dockspace"));
+
+        menuBar.imgui();
+
+        //ImGui.end();
 
     }
 
