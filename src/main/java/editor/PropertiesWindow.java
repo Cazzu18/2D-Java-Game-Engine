@@ -25,7 +25,7 @@ public class PropertiesWindow {
     public void update(float dt, Scene currentScene, boolean canPick){
         debounceTime -= dt;
 
-        if(MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && debounceTime < 0){
+        if(!MouseListener.isDragging() && MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && debounceTime < 0){
             int x = (int)MouseListener.getScreenX();
             int y = (int)MouseListener.getScreenY();
 

@@ -34,13 +34,13 @@ public class EditorCamera extends Component{
     @Override
     public void editorUpdate(float dt){
         if(MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_MIDDLE) && dragDebounce > 0){
-            this.clickOrigin = new Vector2f(MouseListener.getOrthoX(), MouseListener.getOrthoY()); //mouse position in world coordinates
+            this.clickOrigin = MouseListener.getWorld(); //mouse position in world coordinates
             dragDebounce -= dt;
             return;
         } else if(MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_MIDDLE)){
             // if we get to this if block, then dragDebounce is lt or gt than 0 meaning we arrived
 
-            Vector2f mousePos =  new Vector2f(MouseListener.getOrthoX(), MouseListener.getOrthoY());
+            Vector2f mousePos =  MouseListener.getWorld();
             //getting delta distance between where we first clicked and where we are in the next frame
             Vector2f delta = new Vector2f(mousePos).sub(clickOrigin);
 

@@ -16,18 +16,6 @@ public class SpriteRenderer extends Component {
     private transient Transform lastTransform;//transient is a field modifier that indicates a variable should not be included in the default serialization process
     private transient boolean isDirty = true;
 
-//    public SpriteRenderer(Vector4f color) {
-//        this.color = color;
-//        this.sprite = new Sprite();
-//        this.isDirty = true;
-//    }
-//
-//    public SpriteRenderer(Sprite sprite) {
-//        this.sprite = sprite;
-//        this.color = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);//white
-//        this.isDirty = true;
-//    }
-
     @Override
     public void start(){
         this.lastTransform = gameObject.transform.copy();

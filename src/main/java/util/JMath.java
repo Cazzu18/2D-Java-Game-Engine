@@ -43,7 +43,7 @@ public class JMath {
         return Math.round(clamped * 255.0f);
     }
 
-    public int Vector4fToInt32(Vector4f color){
+    public static int Vector4fToInt32(Vector4f color){
         int alpha = toByte(color.w);
         int red = toByte(color.x);
         int green = toByte(color.y);
@@ -53,7 +53,7 @@ public class JMath {
     }
 
     //ImGui picker needs values from 0 to 1
-    public Vector4f Int32ToVector4f(int argb) {
+    public static Vector4f Int32ToVector4f(int argb) {
         float r = ((argb >>> 16) & 0xFF) / 255.0f;
         float g = ((argb >>> 8)  & 0xFF) / 255.0f;
         float b = ( argb         & 0xFF) / 255.0f;

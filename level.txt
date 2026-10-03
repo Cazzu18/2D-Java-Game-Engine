@@ -1,6 +1,6 @@
 [
   {
-    "uid": 16,
+    "uid": 0,
     "name": "Sprite_Object_Gen",
     "components": [
       {
@@ -92,7 +92,7 @@
     "isDead": false
   },
   {
-    "uid": 17,
+    "uid": 1,
     "name": "Purple Boxes",
     "components": [
       {
@@ -184,7 +184,7 @@
     "isDead": false
   },
   {
-    "uid": 18,
+    "uid": 2,
     "name": "Sprite_Object_Gen",
     "components": [
       {
