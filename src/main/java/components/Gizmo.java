@@ -62,6 +62,10 @@ public class Gizmo extends Component {
         if(using) {
             this.setInactive();
         }
+
+        xAxisObject.getComponent(SpriteRenderer.class).setColor(JMath.Vector4fToInt32(new Vector4f(0, 0, 0, 0)));
+        yAxisObject.getComponent(SpriteRenderer.class).setColor(JMath.Vector4fToInt32(new Vector4f(0, 0, 0, 0)));
+
     }
 
     @Override
@@ -119,14 +123,14 @@ public class Gizmo extends Component {
     }
 
     private void setActive(){
-        this.xAxisSprite.setColor(new JMath().Vector4fToInt32(xAxisColor));
-        this.yAxisSprite.setColor(new JMath().Vector4fToInt32(yAxisColor));
+        this.xAxisSprite.setColor(JMath.Vector4fToInt32(xAxisColor));
+        this.yAxisSprite.setColor(JMath.Vector4fToInt32(yAxisColor));
     }
 
     private void setInactive(){
         this.activeGameObject = null;
-        this.xAxisSprite.setColor(new JMath().Vector4fToInt32(new Vector4f(0, 0, 0, 0)));
-        this.yAxisSprite.setColor(new JMath().Vector4fToInt32(new Vector4f(0, 0, 0, 0)));
+        this.xAxisSprite.setColor(JMath.Vector4fToInt32(new Vector4f(0, 0, 0, 0)));
+        this.yAxisSprite.setColor(JMath.Vector4fToInt32(new Vector4f(0, 0, 0, 0)));
     }
 
     private boolean checkXHoverState(){
@@ -138,11 +142,11 @@ public class Gizmo extends Component {
                 mousePos.y >= xAxisObject.transform.position.y - (gizmoHeight / 2.0f) &&
                 mousePos.y <= xAxisObject.transform.position.y + (gizmoWidth / 2.0f))
         {
-            xAxisSprite.setColor(new JMath().Vector4fToInt32(xAxisColorHover));
+            xAxisSprite.setColor(JMath.Vector4fToInt32(xAxisColorHover));
             return true;
         }
 
-        xAxisSprite.setColor(new JMath().Vector4fToInt32(xAxisColor));
+        xAxisSprite.setColor(JMath.Vector4fToInt32(xAxisColor));
         return false;
     }
 
@@ -155,11 +159,11 @@ public class Gizmo extends Component {
                 mousePos.y <= yAxisObject.transform.position.y + (gizmoHeight / 2.0f) &&
                 mousePos.y >= yAxisObject.transform.position.y - (gizmoHeight / 2.0f))
         {
-            yAxisSprite.setColor(new JMath().Vector4fToInt32(yAxisColorHover));
+            yAxisSprite.setColor(JMath.Vector4fToInt32(yAxisColorHover));
             return true;
         }
 
-        yAxisSprite.setColor(new JMath().Vector4fToInt32(yAxisColor));
+        yAxisSprite.setColor(JMath.Vector4fToInt32(yAxisColor));
         return false;
     }
 

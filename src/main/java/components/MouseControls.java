@@ -11,6 +11,8 @@ import util.Settings;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 
+//TODO: Find solution for duplicate placement in same position
+
 public class MouseControls extends Component {
     GameObject holdingObject = null; //the object the mouse holding
     private float debounceTime = 0.05f;
@@ -28,6 +30,10 @@ public class MouseControls extends Component {
 
     public void place(){
         GameObject newObj = this.holdingObject.copy();
+        if(newObj.getComponent(StateMachine.class) != null){
+            newObj.getComponent(StateMachine.class).refreshTextures();
+        }
+
         newObj.getComponent(SpriteRenderer.class).setColor(JMath.Vector4fToInt32(new Vector4f(1, 1, 1, 1)));
         newObj.removeComponent(NonPickable.class);//enable selection once obj on scene
         Window.getScene().addGameObjectToScene(newObj);

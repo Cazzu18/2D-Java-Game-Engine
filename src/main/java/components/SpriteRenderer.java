@@ -37,14 +37,12 @@ public class SpriteRenderer extends Component {
         }
     }
 
-    private static final JMath COLOR_MATH = new JMath();
-
     @Override
     public void imgui() {
-        Vector4f editedColor = COLOR_MATH.Int32ToVector4f(this.color);
+        Vector4f editedColor = JMath.Int32ToVector4f(this.color);
 
         if (JImGui.colorPicker4("Color Picker", editedColor)) {
-            setColor(COLOR_MATH.Vector4fToInt32(editedColor));
+            setColor(JMath.Vector4fToInt32(editedColor));
         }
     }
 
