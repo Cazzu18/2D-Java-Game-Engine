@@ -4,6 +4,7 @@ import jade.Camera;
 import jade.KeyListener;
 import jade.MouseListener;
 import org.joml.Vector2f;
+import jade.Window;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -79,8 +80,8 @@ public class EditorCamera extends Component{
         if(dragDebounce <= 0.0f && !MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_MIDDLE)){
             dragDebounce = 0.032f; //0.1f
         }
-
-        if(MouseListener.getScrollY() != 0.0f){
+        //MouseListener.getScrollY() != 0.0f
+        if(Window.getImGuiLayer().isViewportHovered() && MouseListener.getScrollY() != 0.0f){
             float addValue = (float)Math.pow(Math.abs(MouseListener.getScrollY() * scrollSensitivity), 1/levelEditorCamera.getZoom());
 
             addValue *= -Math.signum(MouseListener.getScrollY());//getting sign of the scroll

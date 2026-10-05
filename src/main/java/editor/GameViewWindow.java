@@ -57,6 +57,7 @@ public class GameViewWindow {
         //IsItemHovered() is a core function used to detect whether the mouse cursor is hovering over the immediately preceding widget in the execution flow
         wantCaptureMouse = ImGui.isItemHovered();
 
+
         ImGui.end();
 
     }

@@ -7,6 +7,9 @@ import jade.*;
 import org.joml.Vector2f;
 import util.AssetPool;
 
+import java.io.File;
+import java.util.Collection;
+
 public class LevelEditorSceneInitializer extends SceneInitializer {
 
     private Spritesheet sprites;
@@ -101,6 +104,23 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
         AssetPool.getTexture("assets/images/blendImage2.png");
 
         AssetPool.addSpritesheet("assets/images/gizmos.png", new Spritesheet(AssetPool.getTexture("assets/images/gizmos.png"), 24, 48, 3, 0)); //Might be 3 sprites
+
+        //sounds
+        AssetPool.addSound("assets/sounds/main-theme-overworld.ogg", true);
+        AssetPool.addSound("assets/sounds/flagpole.ogg", false);
+        AssetPool.addSound("assets/sounds/break_block.ogg", false);
+        AssetPool.addSound("assets/sounds/bump.ogg", false);
+        AssetPool.addSound("assets/sounds/coin.ogg", false);
+        AssetPool.addSound("assets/sounds/gameover.ogg", false);
+        AssetPool.addSound("assets/sounds/jump-small.ogg", false);
+        AssetPool.addSound("assets/sounds/mario_die.ogg", false);
+        AssetPool.addSound("assets/sounds/pipe.ogg", false);
+        AssetPool.addSound("assets/sounds/powerup.ogg", false);
+        AssetPool.addSound("assets/sounds/powerup_appears.ogg", false);
+        AssetPool.addSound("assets/sounds/stage_clear.ogg", false);
+        AssetPool.addSound("assets/sounds/stomp.ogg", false);
+        AssetPool.addSound("assets/sounds/kick.ogg", false);
+        AssetPool.addSound("assets/sounds/invincible.ogg", false);
 
         //go through each game object and set texture to the one texture they should have from assetpool
         for (GameObject obj : scene.getGameObjects()) {
@@ -282,6 +302,56 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
 
                 ImGui.endTabItem();
             }
+
+            if(ImGui.beginTabItem("Sounds")){
+                //Collection<Sound> sounds = AssetPool.getAllSounds();
+
+//                for(Sound sound : sounds){
+//                    File tmp = new File(sound.getFilePath());
+//                    if(ImGui.button(tmp.getName())){
+//                        if(!sound.isPlaying()){
+//                            sound.play();
+//                        } else {
+//                            sound.stop();
+//                        }
+//                    }
+//
+//                    if(ImGui.getContentRegionAvailX() > 150){
+//                        ImGui.sameLine();
+//                    }
+//                }
+
+                Sound[] sounds = AssetPool.getAllSounds().toArray(new Sound[0]);
+                float rightEdge = ImGui.getWindowPosX() + ImGui.getWindowContentRegionMaxX();
+
+                for (int i = 0; i < sounds.length; i++) {
+                    Sound sound = sounds[i];
+                    File tmp = new File(sound.getFilePath());
+
+                    if (ImGui.button(tmp.getName())) {
+                        if (!sound.isPlaying()) {
+                            sound.play();
+                        } else {
+                            sound.stop();
+                        }
+                    }
+
+                    if (i + 1 < sounds.length) {
+                        String nextName = new File(sounds[i + 1].getFilePath()).getName();
+                        float nextRightEdge = ImGui.getItemRectMaxX()
+                                + ImGui.getStyle().getItemSpacingX()
+                                + ImGui.calcTextSizeX(nextName)
+                                + 2 * ImGui.getStyle().getFramePaddingX();
+
+                        if (nextRightEdge <= rightEdge) {
+                            ImGui.sameLine();
+                        }
+                    }
+                }
+
+                ImGui.endTabItem();
+            }
+
             ImGui.endTabBar();
         }
 

@@ -8,6 +8,10 @@ import observers.events.Event;
 import observers.events.EventType;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.ALC;
+import org.lwjgl.openal.ALCCapabilities;
+import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.opengl.GL;
 import renderer.*;
 import scenes.LevelEditorSceneInitializer;
@@ -18,6 +22,7 @@ import util.Time;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -34,6 +39,9 @@ public class Window implements Observer {
 
     //singleton. We'll only ever have one instance of window
     private static Window window = null;
+
+    private long audioContext;
+    private long audioDevice;
 
     private static Scene currentScene;
 
@@ -76,6 +84,10 @@ public class Window implements Observer {
 
         init();
         loop();
+
+        //Destroy audio context and devices
+        alcDestroyContext(audioContext);
+        alcCloseDevice(audioDevice);
 
         //Since we're using C bindings in Java
         //free memory once loop has exited
@@ -126,6 +138,21 @@ public class Window implements Observer {
 
         //make the window visible
         glfwShowWindow(glfwWindow);
+
+        //Intit the audion device(do before glcreatecapabilites)
+        String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
+        audioDevice = alcOpenDevice(defaultDeviceName);
+
+        int[] attributes = {0};
+        audioContext = alcCreateContext(audioDevice, attributes); //not using any attributes
+        alcMakeContextCurrent(audioContext);
+
+        ALCCapabilities alcCapabilities = ALC.createCapabilities(audioDevice);
+        ALCapabilities alCapabilities = AL.createCapabilities(alcCapabilities);
+
+        if(!alCapabilities.OpenAL10){
+            assert false: "Audio library not supported.";
+        }
 
         //This line is critical for LWJGL's interpolation with GLFW's
         // OpenGl context, or any context that is managed externally
@@ -182,6 +209,7 @@ public class Window implements Observer {
 
             pickingTexture.disableWriting();
             glEnable(GL_BLEND);
+            this.imGuiLayer.update(dt, currentScene); //more like begin frame
 
             //Render pass 2. Render actual game
 
@@ -218,7 +246,8 @@ public class Window implements Observer {
             * and seamless transition.
             */
 
-            this.imGuiLayer.update(dt, currentScene);
+            //this.imGuiLayer.update(dt, currentScene);
+            this.imGuiLayer.endFrame();
             glfwSwapBuffers(glfwWindow);
 
             MouseListener.endFrame();

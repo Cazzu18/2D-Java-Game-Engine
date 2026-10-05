@@ -105,7 +105,7 @@ public class ImGuiLayer {
         propertiesWindow.imgui();
         sceneHierarchyWindow.imgui();
         ImGui.end();
-        endFrame();
+        //endFrame();
 
         //Multi-viewport support (only runs if enabled)
 //        if (ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
@@ -116,7 +116,11 @@ public class ImGuiLayer {
 //        }
     }
 
-    private void endFrame() {
+    public boolean isViewportHovered() {
+        return gameViewWIndow.getWantCaptureMouse();
+    }
+
+    public void endFrame() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);//unbind any framebuffers currently on the window
         glViewport(0, 0, Window.getWidth(), Window.getHeight());
         glClearColor(0, 0, 0, 1); //black
